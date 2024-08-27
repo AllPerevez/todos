@@ -110,26 +110,30 @@ todoItemList.addEventListener("click", function (event) {
     }
 });
 
-let allCompleted = false;
-
 // Завершить все задачи
 completeAllTasks.addEventListener("click", function () {
     let itemArray = getItemArray();
 
-    allCompleted = !allCompleted;
+    const hasCompleted = itemArray.some(task => task.classList.contains('completed'));
+    const hasActive = itemArray.some(task => task.classList.contains('active'));
 
-    itemArray.forEach(task => {
-        if (allCompleted) {
+    if (hasCompleted && hasActive || hasActive) {
+        itemArray.forEach(task => {
             task.classList.add('completed');
             task.classList.remove('active');
-        } else {
+
+            let checkbox = task.querySelector('input[type="checkbox"]');
+            checkbox.checked = true; 
+        });
+    } else if  (hasCompleted) {
+        itemArray.forEach(task => {
             task.classList.remove('completed');
             task.classList.add('active');
-        }
 
-        let checkbox = task.querySelector('input[type="checkbox"]');
-        checkbox.checked = task.classList.contains('completed');
-    });
+            let checkbox = task.querySelector('input[type="checkbox"]');
+            checkbox.checked = false; 
+        });
+    }
 
     updateItemsLeftCount();
     updateClearButtonVisibility();
