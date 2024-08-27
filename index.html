@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="wrapper">
+        <div class="todo__container">
+            <div class="title">
+                <h1>todos</h1>
+            </div>
+            <div class="main">
+                <div class="input__container">
+                    <div class="complete-all"></div>
+                    <input type="text" class="new-task" placeholder="What needs to be done?" autofocus>
+                </div>
+                <div class="todos__list">
+                    <ul class="todo-item-list">
+                        <!-- тут список дел -->
+                    </ul>
+                </div>
+                <div class="todos__actions">
+                    <div class="items-count">
+                        <p class="count"></p>
+                    </div>
+                    <div class="items-filters">
+                        <ul class="filter__list">
+                            <li class="all-tasks selected">All</li>
+                            <li class="filter-active">Active</li>
+                            <li class="filter-completed">Completed</li>
+                        </ul>
+                    </div>
+                    <div class="items-clear">
+                        <p class="clear">Clear completed</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <ul class="hint__list">
+                    <li>Double-click to edit a todo</li>
+                    <li>Created by the TodoMVC Team</li>
+                    <li>Part of TodoMVC</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
