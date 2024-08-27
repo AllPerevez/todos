@@ -10,8 +10,6 @@ let activeTasks = document.querySelector('.filter-active');
 let completedTasks = document.querySelector('.filter-completed');
 let clearBtn = document.querySelector('.clear');
 
-let itemArray = Array.from(todoItemList.children);
-
 // Функция добавления новой задачи
 function addTaskToList(value) {
     if (!value) {
@@ -50,6 +48,11 @@ function addTaskToList(value) {
     updateItemsLeftCount();
 }
 
+// Функция для получения списка задач
+function getItemArray() {
+    return Array.from(todoItemList.children);
+}
+
 // Функция удаления задачи
 function handleDeleteButtonClick(event) {
     let li = event.target.closest('li');
@@ -60,15 +63,14 @@ function handleDeleteButtonClick(event) {
 
 // Функция пересчета количества активных задач
 function updateItemsLeftCount() {
-    let itemArray = Array.from(todoItemList.children);
-    let activeItemsCount = itemArray.filter(task => task.classList.contains('active')).length;
+    let activeItemsCount = getItemArray().filter(task => task.classList.contains('active')).length;
 
     countItems.textContent = `${activeItemsCount} items left`;
 }
 
 // Функция для отображения .items-clear
 function updateClearButtonVisibility() {
-    let completedItems = Array.from(todoItemList.children).filter(task => task.classList.contains('completed'));
+    let completedItems = getItemArray().filter(task => task.classList.contains('completed'));
 
     if (completedItems.length > 0) {
         clearBtn.style.display = 'block';
@@ -108,24 +110,41 @@ todoItemList.addEventListener("click", function (event) {
     }
 });
 
+let allCompleted = false;
+
 // Завершить все задачи
 completeAllTasks.addEventListener("click", function () {
-    let itemArray = Array.from(todoItemList.children);
-    itemArray.forEach(task => task.classList = 'completed');
+    let itemArray = getItemArray();
+
+    allCompleted = !allCompleted;
+
+    itemArray.forEach(task => {
+        if (allCompleted) {
+            task.classList.add('completed');
+            task.classList.remove('active');
+        } else {
+            task.classList.remove('completed');
+            task.classList.add('active');
+        }
+
+        let checkbox = task.querySelector('input[type="checkbox"]');
+        checkbox.checked = task.classList.contains('completed');
+    });
 
     updateItemsLeftCount();
+    updateClearButtonVisibility();
 });
 
 // Фильтр для отображения всех задач
 allTasks.addEventListener("click", function () {
-    let itemArray = Array.from(todoItemList.children);
+    let itemArray = getItemArray();
     itemArray.forEach(task => task.style.display = 'block');
     updateFilterSelection(allTasks);
 });
 
 // Фильтр для отображения только активных задач
 activeTasks.addEventListener("click", function () {
-    let itemArray = Array.from(todoItemList.children);
+    let itemArray = getItemArray();
     let activeItems = itemArray.filter(task => task.classList.contains('active'));
     itemArray.forEach(task => task.style.display = 'none');
     activeItems.forEach(task => task.style.display = 'block');
@@ -135,7 +154,7 @@ activeTasks.addEventListener("click", function () {
 
 // Фильтр для отображения только завершенных задач
 completedTasks.addEventListener("click", function () {
-    let itemArray = Array.from(todoItemList.children);
+    let itemArray = getItemArray();
     let completedItems = itemArray.filter(task => task.classList.contains('completed'));
     itemArray.forEach(task => task.style.display = 'none');
     completedItems.forEach(task => task.style.display = 'block');
@@ -145,10 +164,13 @@ completedTasks.addEventListener("click", function () {
 
 // Кнопка удалить все завершенные задачи
 clearBtn.addEventListener("click", function () {
-    let itemArray = Array.from(todoItemList.children);
-    let completedItems = itemArray.filter(task => task.classList.contains('completed'));
+    let completedItems = getItemArray().filter(task => task.classList.contains('completed'));
     completedItems.forEach(task => task.remove());
 
     updateItemsLeftCount();
     updateClearButtonVisibility();
+    let itemArray = getItemArray();
+    if (itemArray.length == 0) {
+        todosActions.style.display = 'none';
+    }
 });
