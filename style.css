@@ -220,6 +220,10 @@ text-decoration: underline;
     list-style: none;
 }
 
+.edit-input {
+    outline: none;
+}
+
 @media screen and (max-width: 1024px) { 
     .todo__container {
         width: 100%;
