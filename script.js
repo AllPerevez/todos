@@ -16,7 +16,7 @@ function addTaskToList(value) {
     return false;
   }
 
-  console.log(value);
+  // console.log(value);
 
   let todoList = document.querySelector(".todo-item-list");
   let li = document.createElement("li");
@@ -209,5 +209,52 @@ clearBtn.addEventListener("click", function () {
   let itemArray = getItemArray();
   if (itemArray.length == 0) {
     todosActions.style.display = "none";
+  }
+});
+
+// Переименовать задачу по двойному нажатию на название
+todoItemList.addEventListener("dblclick", function(event) {
+  if (event.target.tagName === "LABEL") {
+    let label = event.target;
+    let originalText = label.textContent;
+    let li = label.closest("li");
+    let div = label.parentNode;
+    
+    let input = document.createElement("input");
+    input.type = "text";
+    input.value = originalText;
+    input.className = "edit-input";
+    
+    div.replaceChild(input, label);
+
+    input.focus();
+    let escapePressed = false;
+
+    // Обработчик для завершения редактирования по нажатию Enter
+    input.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        label.textContent = input.value;
+        div.replaceChild(label, input);
+      }
+    });
+
+    // Обработчик для отмены редактирования по нажатию Esc
+    input.addEventListener("keydown", function(event) {
+      if (event.key === "Escape") {
+        escapePressed = true; 
+        label.textContent = originalText; 
+        div.replaceChild(label, input);
+        event.preventDefault();
+      }
+    });
+
+    // Обработчик для завершения редактирования по потере фокуса
+    input.addEventListener("blur", function() {
+      if (!escapePressed) { 
+        label.textContent = input.value;
+        div.replaceChild(label, input);
+      }
+      escapePressed = false;
+    });
   }
 });
