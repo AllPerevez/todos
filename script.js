@@ -10,6 +10,39 @@ let activeTasks = document.querySelector(".filter-active");
 let completedTasks = document.querySelector(".filter-completed");
 let clearBtn = document.querySelector(".clear");
 
+// Функция, которая проходит по всем элементам задач и сохраняет их данные в массив объектов
+function saveTasks() {
+  const tasks = getItemArray().map(task => {
+    return {
+      text: task.querySelector('label').textContent,
+      status: task.classList.contains("completed") ? "completed" : "active"
+    };
+  });
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Функция для загрузки задач из localStorage
+function loadTasks() {
+  const tasks = localStorage.getItem('tasks');
+  if (tasks) {
+    JSON.parse(tasks).forEach(taskData => {
+      addTaskToList(taskData.text);
+      // Поскольку addTaskToList добавляет задачу с классом "active" по умолчанию,
+      // если задача была выполнена, обновляем её статус:
+      const addedTask = todoItemList.firstChild; // так как мы используем prepend
+      if (taskData.status === "completed") {
+        addedTask.classList.remove("active");
+        addedTask.classList.add("completed");
+        addedTask.querySelector('input[type="checkbox"]').checked = true;
+      }
+    });
+    updateItemsLeftCount();
+    updateClearButtonVisibility();
+    saveTasks(); 
+  }
+}
+
+
 // Функция добавления новой задачи
 function addTaskToList(value) {
   if (!value) {
@@ -59,6 +92,8 @@ function handleDeleteButtonClick(event) {
   li.remove();
 
   updateItemsLeftCount();
+  updateClearButtonVisibility();
+  saveTasks();
 }
 
 // Функция пересчета количества активных задач
@@ -128,6 +163,7 @@ todoItemList.addEventListener("click", function (event) {
 
     updateItemsLeftCount();
     updateClearButtonVisibility();
+    saveTasks();
   }
 });
 
@@ -161,6 +197,7 @@ completeAllTasks.addEventListener("click", function () {
   updateItemsLeftCount();
   updateClearButtonVisibility();
   updateTaskVisibility();
+  saveTasks();
 });
 
 // Фильтр для отображения всех задач
@@ -205,6 +242,7 @@ clearBtn.addEventListener("click", function () {
   updateClearButtonVisibility();
   updateFilterSelection(allTasks);
   updateTaskVisibility();
+  saveTasks();
 
   let itemArray = getItemArray();
   if (itemArray.length == 0) {
@@ -235,9 +273,14 @@ todoItemList.addEventListener("dblclick", function(event) {
       }
     });
 
-    // HОбработчик для завершения редактирования по потере фокуса
+    // Обработчик для завершения редактирования по потере фокуса
     label.addEventListener("blur", function() {
       label.contentEditable = 'false';  
     });
   }
+
+  saveTasks();
 });
+
+// Загружаем задачи из localStorage при загрузке страницы
+loadTasks();
