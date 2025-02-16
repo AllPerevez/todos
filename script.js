@@ -79,6 +79,7 @@ function addTaskToList(value) {
   }
 
   updateItemsLeftCount();
+  saveTasks();
 }
 
 // Функция для получения списка задач
