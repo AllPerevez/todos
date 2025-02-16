@@ -25,11 +25,11 @@ function saveTasks() {
 function loadTasks() {
   const tasks = localStorage.getItem('tasks');
   if (tasks) {
-    JSON.parse(tasks).forEach(taskData => {
+    JSON.parse(tasks).reverse().forEach(taskData => {
       addTaskToList(taskData.text);
-      // Поскольку addTaskToList добавляет задачу с классом "active" по умолчанию,
-      // если задача была выполнена, обновляем её статус:
-      const addedTask = todoItemList.firstChild; // так как мы используем prepend
+
+      const addedTask = todoItemList.lastChild; 
+      
       if (taskData.status === "completed") {
         addedTask.classList.remove("active");
         addedTask.classList.add("completed");
@@ -68,7 +68,7 @@ function addTaskToList(value) {
 
   button.addEventListener("click", handleDeleteButtonClick);
 
-  todoList.prepend(li);
+  todoList.appendChild(li);
   li.appendChild(div);
   div.appendChild(checkbox);
   div.appendChild(label);
