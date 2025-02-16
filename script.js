@@ -283,4 +283,6 @@ todoItemList.addEventListener("dblclick", function(event) {
 });
 
 // Загружаем задачи из localStorage при загрузке страницы
-loadTasks();
+document.addEventListener('DOMContentLoaded', function() {
+  saveTasks();
+});
